@@ -11,3 +11,58 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+
+
+// schemas
+
+enum Role {
+	OWNER
+	EDITER
+	VIEWER
+}
+
+model User {
+	id Int @id @default(autoincrement())
+	name String
+	role Role @default(VIEWER)
+	email String @unique
+	password String
+
+	//relations
+	projects UserProjectJunction[]
+}
+
+model Project {
+	id Int @id @default(autoincrement())
+	name String
+
+	created_time DateTime @default(now())
+	updated_time DateTime @updatedAt
+
+	// relations
+	documents Document[]
+	users UserProjectJunction[]
+}
+
+model UserProjectJunction {
+	// id Int @id @default(autoincrement())
+	joined_at DateTime @default(now())
+
+
+	user User @relation(fields: [user_id], references: [id])
+	user_id Int
+	project Project @relation(fields: [project_id], references: [id])
+	project_id Int
+
+	@@id([user_id, project_id])
+}
+
+model Document {
+	id Int @id @default(autoincrement())
+	name String
+
+	// relations
+	project Project @relation(fields: [project_id], references: [id])
+	project_id Int
+}
