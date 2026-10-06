@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { DataBaseService } from './data-base.service.js';
 
+@Global()
 @Module({
 	providers: [DataBaseService],
 	exports: [DataBaseService]
